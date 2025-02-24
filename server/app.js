@@ -22,11 +22,16 @@ app.get('/',(req,res)=>{
 
 io.on("connection",(socket)=>{
     console.log("user connected",socket.id);
-    socket.on("message",(data)=>{
-        console.log(data);
+
+
+    socket.on("message",({room,message})=>{
+        console.log({room,message});
         
+        io.to(room).emit("receive-message",message); 
     })
-    io.emit("reveive-message",data);
+    socket.on("disconnect", () => {
+        console.log("User Disconnected", socket.id);
+      });
 })
 
 
