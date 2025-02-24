@@ -21,9 +21,12 @@ app.get('/',(req,res)=>{
 })
 
 io.on("connection",(socket)=>{
-    console.log("user connected");
-    console.log("id",socket.id);
-    socket.emit("welcome",`welcome to sockets ${socket.id}`)
+    console.log("user connected",socket.id);
+    socket.on("message",(data)=>{
+        console.log(data);
+        
+    })
+    io.emit("reveive-message",data);
 })
 
 
