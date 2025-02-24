@@ -3,11 +3,14 @@ import { io } from "socket.io-client";
 import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 
 const App = () => {
-  const socket = useMemo(() => io("http://localhost:3000"), []);
+  const socket = useMemo(() => io("http://localhost:3000",{
+    withCredentials:true,
+  }), []);
   const [message, setMessage] = useState("");
   const [room, setRoom] = useState("");
   const [socketId, setSocketId] = useState("");
   const [msg,setMsg] =useState([]);
+  const [roomName, setRoomName] = useState("");
 
   
    
@@ -36,16 +39,25 @@ const App = () => {
     };
   }, []);
 
+  const joinroomHandler=(e)=>{
+    e.preventDefault();
+    socket.emit("join-room",roomName)
+    setRoomName("");
+  }
   return (
     <Container maxWidth="sm">
-      <Box sx={{height:500}}/>
+      <Box sx={{height:200}}/>
       <Typography variant="h5" component="div" gutterBottom>
         {socketId}
       </Typography>
-      <form>
-        <h5>
-          
-        </h5>
+      <form onSubmit={joinroomHandler}>
+        <h5> Join Room </h5>
+        <TextField
+          label="Room Name"
+          value={roomName}
+          onChange={(e) => setRoomName(e.target.value)}
+        />
+        <Button type="submit">join</Button>
       </form>
       <form onSubmit={handleSubmit}>
         <TextField
